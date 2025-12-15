@@ -5,4 +5,7 @@ module game.gridstrategygame {
 
     opens game.gridstrategygame to javafx.fxml;
     exports game.gridstrategygame;
+
+    opens game.gridstrategygame.Controller to javafx.fxml;
+    exports game.gridstrategygame.Controller;
 }
