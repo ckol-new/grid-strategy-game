@@ -10,13 +10,17 @@ import javafx.scene.Parent;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 
+import java.util.Arrays;
+
 public class GameController {
     // field
     Game gameInstance;
     AnchorPane root;
-    GridView gridView = new GridView(800, 600);
+    GridView gridView = new GridView(800, 580);
     TerrainMap tm = new TerrainMap();
     EntityMap em = new EntityMap(tm);
+
+    int[] tileSelected;
 
     // fxml field
 
@@ -52,6 +56,16 @@ public class GameController {
         });
     }
 
+    public void handleSelection(int[] pos) {
+        tileSelected = pos;
+
+        //DEBUG
+        System.out.println("selected: " + Arrays.toString(pos));
+    }
+
+
+
+
     // set game instance
     public void setGameInstance(Game game) {
         gameInstance = game;
@@ -59,6 +73,7 @@ public class GameController {
     public void setRoot(AnchorPane root) {
         this.root = root;
         setGridView();
+        gridView.setGameControllerInstance(this);
     }
 
 }

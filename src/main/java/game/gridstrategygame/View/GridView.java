@@ -1,6 +1,8 @@
 package game.gridstrategygame.View;
 
+import game.gridstrategygame.Controller.GameController;
 import game.gridstrategygame.Model.*;
+import javafx.animation.PauseTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
@@ -8,6 +10,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 public class GridView extends StackPane {
     // static fields
@@ -19,6 +22,8 @@ public class GridView extends StackPane {
     final int TILE_HEIGHT;
 
     static final int GRID_SIZE_SQUARE = 10;
+
+    GameController gameControllerInstance;
 
     // fields
     Canvas terrainCanvas;
@@ -83,9 +88,11 @@ public class GridView extends StackPane {
             int gx = (int) (evt.getX() / TILE_WIDTH);
             int gy = (int) (evt.getY() / TILE_HEIGHT);
 
-            System.out.println("Clicked" + gx + " " + gy);
+
+            gameControllerInstance.handleSelection(new int[]{gy, gx});
         });
     }
+
 
     // draw terrain map
     public void drawTerrain(TerrainMap terrainMap) {
@@ -133,8 +140,10 @@ public class GridView extends StackPane {
                 gcEntity.drawImage(entityTexture, x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
             }
         }
-
     }
 
+    public void setGameControllerInstance(GameController gameController) {
+        gameControllerInstance = gameController;
+    }
 
 }
