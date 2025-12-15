@@ -28,10 +28,14 @@ public class MenuController {
     // intialize
     @FXML
     public void initialize() {
-
+        setUIEventHandlers();
     }
 
-
+    // set event handlers
+    public void setUIEventHandlers() {
+        startButton.setOnAction(evt -> gameInstance.setSceneGame());
+        quitButton.setOnAction(evt -> gameInstance.closeGame());
+    }
 
     // set game isntance
     public void setGameInstance(Game game) { gameInstance = game; }

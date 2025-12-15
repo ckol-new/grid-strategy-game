@@ -1,7 +1,9 @@
 package game.gridstrategygame;
 
+import game.gridstrategygame.Controller.GameController;
 import game.gridstrategygame.Controller.MenuController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -48,4 +50,31 @@ public class Game extends Application {
     }
 
     // set scene game
+    public void setSceneGame() {
+        // load controller and scene
+        FXMLLoader loader;
+        GameController gameController;
+        Parent root;
+        Scene gameScene;
+        try {
+            loader = new FXMLLoader(Game.class.getResource("/game/gridstrategygame/game.fxml"))   ;
+            root = loader.load();
+            gameController = loader.getController();
+            gameScene = new Scene(root);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // pass controller instance of game
+        gameController.setGameInstance(this);
+
+        // set stage
+        primaryStage.setScene(gameScene);
+        primaryStage.show();
+    }
+
+    // close
+    public void closeGame() {
+        Platform.exit();
+    }
 }
