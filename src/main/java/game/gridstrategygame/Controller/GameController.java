@@ -1,6 +1,8 @@
 package game.gridstrategygame.Controller;
 
 import game.gridstrategygame.Game;
+import game.gridstrategygame.Model.EntityMap;
+import game.gridstrategygame.Model.TerrainMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 
