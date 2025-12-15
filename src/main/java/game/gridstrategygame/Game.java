@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -67,6 +68,7 @@ public class Game extends Application {
 
         // pass controller instance of game
         gameController.setGameInstance(this);
+        gameController.setRoot((AnchorPane) root);
 
         // set stage
         primaryStage.setScene(gameScene);
