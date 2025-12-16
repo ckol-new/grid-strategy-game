@@ -170,24 +170,28 @@ public class InputController {
         // calculate valid squares
         if (movementType == MovementType.ORTHOGONAL) {
             int[][] orthoNeighours = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
-            for (int[] neighbour : orthoNeighours) {
-                // multiply by movement distance
-                Arrays.setAll(neighbour, i -> neighbour[i] * movementDistance);
-
-                int[] next = {neighbour[0] + eLocation[0], neighbour[1] + eLocation[1]};
-
-                validTilesList.add(next);
+            // for each position leading up to max movement distance, you can move to
+            for (int j = 1; j <= movementDistance; j++) {
+                for (int[] neighbour : orthoNeighours) {
+                    // multiply by movement distance
+                    int finalJ = j;
+                    Arrays.setAll(neighbour, i -> neighbour[i] * finalJ);
+                    int[] next = {neighbour[0] + eLocation[0], neighbour[1] + eLocation[1]};
+                    validTilesList.add(next);
+                }
             }
         }
         else if (movementType == MovementType.DIAGONAL) {
             int[][] diagoNeighbours = {{-1, -1}, {1, -1}, {1, 1}, {-1, 1}};
-            for (int[] neighbour : diagoNeighbours) {
-                // multiply by movement distance
-                Arrays.setAll(neighbour, i -> neighbour[i] * movementDistance);
-
-                int[] next = {neighbour[0] + eLocation[0], neighbour[1] + eLocation[1]};
-
-                validTilesList.add(next);
+            // for each position leading up to max movement distance, you can move to
+            for (int j = 1; j <= movementDistance; j++) {
+                for (int[] neighbour : diagoNeighbours) {
+                    // multiply by movement distance
+                    int finalJ = j;
+                    Arrays.setAll(neighbour, i -> neighbour[i] * finalJ);
+                    int[] next = {neighbour[0] + eLocation[0], neighbour[1] + eLocation[1]};
+                    validTilesList.add(next);
+                }
             }
         }
 
