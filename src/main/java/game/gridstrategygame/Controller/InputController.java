@@ -1,11 +1,9 @@
 package game.gridstrategygame.Controller;
 
-import game.gridstrategygame.Model.Allegiance;
-import game.gridstrategygame.Model.Entity;
-import game.gridstrategygame.Model.EntityMap;
-import game.gridstrategygame.Model.TurnState;
+import game.gridstrategygame.Model.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class InputController {
     // fields
@@ -35,20 +33,32 @@ public class InputController {
 
             // add to buffer
             selectionBuffer.add(selection);
+
+
         }
 
         else if (selectionBuffer.size() == 1) {
             // check turn state of entity (at first index in buffer) (previous selection)
             if (selectionBuffer.get(0).entity.getTurnState() == TurnState.MOVE) {
-                // if move -> selection must be walkable
-                if (!em.isWalkable(pos)) {
+                // get valid positions
+                ArrayList<int[]> validPos = getValidTilesMove(selectionBuffer.get(0).entity, em);
+
+                // if move -> selection must be valid
+                boolean isValisPos = false;
+                for (int[] vPos : validPos) {
+                    // if valid -> do seletion
+                    if (Arrays.equals(pos, vPos)) {
+                        isValisPos = true;
+                        selectionBuffer.add(selection);
+                    }
+                }
+
+                // if not valid -> clear buffer
+                if (!isValisPos) {
                     // clear buffer, return false
                     selectionBuffer.clear();
                     return false;
                 }
-
-                // otherwise, add to buffer
-                selectionBuffer.add(selection);
             }
             //TODO add logic for attacks
         }
@@ -56,6 +66,10 @@ public class InputController {
         // if buffer is full -> do action
         if (selectionBuffer.size() == 2) {
             completeTurn(em);
+        }
+        // show user valid turns
+        else if (selectionBuffer.size() == 1) {
+
         }
 
         return true;
@@ -81,10 +95,57 @@ public class InputController {
             // entityTurn.updateTurnState();
         }
 
+
+
         // clear buffer
         selectionBuffer.clear();
 
     }
+
+    // get list of valid tiles to move to for given entity
+    public ArrayList<int[]> getValidTilesMove(Entity e, EntityMap em) {
+        ArrayList<int[]> validTilesList = new ArrayList<>();
+
+        // get entity location
+        int[] eLocation = e.getPosition();
+
+        // get entity movement type and distance
+        MovementType movementType = e.getMovementType();
+        int movementDistance = e.getMovementDistance();
+
+        // calculate valid squares
+        if (movementType == MovementType.ORTHOGONAL) {
+            int[][] orthoNeighours = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+            for (int[] neighbour : orthoNeighours) {
+                // multiply by movement distance
+                Arrays.setAll(neighbour, i -> neighbour[i] * movementDistance);
+
+                int[] next = {neighbour[0] + eLocation[0], neighbour[1] + eLocation[1]};
+
+                validTilesList.add(next);
+            }
+        }
+
+        // remove none valid positions
+        ArrayList<int[]> toBeRemoved = new ArrayList<>();
+        for (int[] pos : validTilesList) {
+            // remove all out of bounds
+            if (!em.isInBound(pos)) toBeRemoved.add(pos);
+
+                // remove all not walkable
+            else if (!em.isWalkable(pos)) toBeRemoved.add(pos);
+        }
+
+        for (int[] posRemove : toBeRemoved) {
+            validTilesList.remove(posRemove);
+        }
+
+
+
+        return validTilesList;
+    }
+
+
 
 
 }
