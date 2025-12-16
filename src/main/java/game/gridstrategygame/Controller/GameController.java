@@ -19,6 +19,7 @@ public class GameController {
     GridView gridView = new GridView(800, 580);
     TerrainMap tm = new TerrainMap();
     EntityMap em = new EntityMap(tm);
+    InputController inputController = new InputController();
 
     int[] tileSelected;
 
@@ -58,9 +59,15 @@ public class GameController {
 
     public void handleSelection(int[] pos) {
         tileSelected = pos;
-
         //DEBUG
         System.out.println("selected: " + Arrays.toString(pos));
+        Selection selection = new Selection(em.getEntityAtPos(pos), pos);
+
+        // check selection
+        boolean turnBoolean = inputController.checkSelection(selection, em);
+        if (turnBoolean) {
+            gridView.drawEntities(em);
+        }
     }
 
 

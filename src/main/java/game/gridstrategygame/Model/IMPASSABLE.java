@@ -6,4 +6,8 @@ public class IMPASSABLE extends Entity {
     public IMPASSABLE() {
         super();
     }
+
+    @Override
+    public void updateTurnState() {
+    }
 }

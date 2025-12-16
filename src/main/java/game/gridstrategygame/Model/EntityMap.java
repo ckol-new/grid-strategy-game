@@ -1,5 +1,6 @@
 package game.gridstrategygame.Model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -10,6 +11,7 @@ public class EntityMap {
     // field
     int localDifficulty;
     Entity[][] entityMatrix;
+    ArrayList<Entity> activeEntitiesList = new ArrayList<>();
     int[] mapSize;
 
     // constructor
@@ -95,15 +97,58 @@ public class EntityMap {
 
         return entityMatrix[pos[0]][pos[1]];
     }
+    public boolean isWalkable(int r, int c) {
+        if (!isInBound(r, c)) throw new RuntimeException("OUT OF BOUNDS: " + r + " " + c);
 
+        if (entityMatrix[r][c] == null) return true;
+        return false;
+    }
+    public boolean isWalkable(int[] pos) {
+        if (!isInBound(pos)) throw new RuntimeException("OUT OF BOUNDS: " + Arrays.toString(pos));
+
+        if (entityMatrix[pos[0]][pos[1]] == null) return true;
+        return false;
+    }
     public int[] getMapSize() {
         return mapSize;
     }
+    public boolean isEntityAlive(Entity entity) {
+        for (Entity entityAlive : activeEntitiesList) {
+            if (entityAlive.equals(entity)) return true;
+        }
+
+        return false;
+    }
+
+    // setters
+    public void moveEntity(Entity entity, int[] location) {
+        // check if alive
+        if (!isEntityAlive(entity)) throw new RuntimeException("tried to move dead entity: " + entity.toString()); // not alive -> do nothing
+
+        // check if walkable
+        if (!isInBound(location)) throw new RuntimeException("tried to move entity: " + entity.toString() +" to an out of bound position: " + Arrays.toString(location));
+        if (!isWalkable(location)) return; // not walkable do nothing
+
+        // move entity
+        entityMatrix[location[0]][location[1]] = entity;
+
+        // clear old positions
+        int[] oldPos = entity.getPosition();
+        entityMatrix[oldPos[0]][oldPos[1]] = null;
+
+        // update state
+        entity.setPosition(location);
+    }
 
     // DEBUG place knight enemy
-    private void placeKnight(int y, int x) {
-        Knight knight = new Knight(3, 2, MovementType.ORTHOGONAL, "knight.png", 1);
-        entityMatrix[y][x] = knight;
+    private void placeKnight(int r, int c) {
+        Knight knight = new Knight(3, 2, MovementType.ORTHOGONAL, "knight.png", 1, Allegiance.ALLY);
+        // add to matrix and active entity array
+        entityMatrix[r][c] = knight;
+        activeEntitiesList.add(knight);
+
+        // update knight position variable
+        knight.setPosition(new int[]{r, c});
     }
 
     //DEBUG display

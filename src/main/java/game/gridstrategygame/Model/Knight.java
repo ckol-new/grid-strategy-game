@@ -2,12 +2,15 @@ package game.gridstrategygame.Model;
 
 public class Knight extends Entity{
     // fields
-    Allegiance ALLEGIANCE = Allegiance.ALLY;
 
-    public Knight(int health, int movementDistance, MovementType movementType, String textureName, int damage) {
-        super(health, movementDistance, movementType, textureName, damage);
+    public Knight(int health, int movementDistance, MovementType movementType, String textureName, int damage, Allegiance allegiance) {
+        super(health, movementDistance, movementType, textureName, damage, allegiance);
     }
 
-    // getter
-    public Allegiance getALLEGIANCE() { return ALLEGIANCE; }
+    @Override
+    public void updateTurnState() {
+        if (this.getTurnState() == TurnState.MOVE) this.setTurnState(TurnState.ATTACK);
+        else if (this.getTurnState() == TurnState.ATTACK) this.setTurnState(TurnState.MOVE);
+    }
+
 }
