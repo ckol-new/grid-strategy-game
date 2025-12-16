@@ -2,7 +2,7 @@ package game.gridstrategygame.Model;
 
 public enum MovementType {
     ORTHOGONAL("orthogonal"),
-    DIAGNOAL("diagonal"),
+    DIAGONAL("diagonal"),
     IMMOBILE("immobile");
 
     final String type;

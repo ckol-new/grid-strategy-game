@@ -9,6 +9,7 @@ import game.gridstrategygame.View.GridView;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.MenuItem;
+import javafx.scene.effect.Effect;
 import javafx.scene.layout.AnchorPane;
 
 import java.util.ArrayList;
@@ -73,11 +74,13 @@ public class GameController {
         }
     }
 
-    public void showValidTurns(ArrayList<int[]> validTurns) {
-        gridView.drawValidTurns(EffectType.VALID_MOVE, validTurns);
+    public void showValidTurns(EffectType type, ArrayList<int[]> validTurns) {
+        gridView.drawValidTurns(type, validTurns);
     }
     public void clearValidTurns() { gridView.clearValidTurns(); }
-
+    public void drawEffects(EffectType type, ArrayList<int[]> effectLocations) {
+        gridView.drawEffect(type, effectLocations);
+    }
 
 
     // set game instance

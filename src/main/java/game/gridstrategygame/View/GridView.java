@@ -164,6 +164,20 @@ public class GridView extends StackPane {
         gcValidTurn.clearRect(0,0, 2000, 2000);
     }
 
+
+    public void drawEffect(EffectType type, ArrayList<int[]> locations) {
+        // clear effect canvas
+        gcEffects.clearRect(0,0, 2000, 2000);
+
+        for (int[] location : locations) {
+            Image effectTexture = new Image(GridView.class.getResourceAsStream("/game/gridstrategygame/textures/" + type.textureName));
+            gcEffects.drawImage(effectTexture, location[1] * TILE_WIDTH, location[0] * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+        }
+    }
+    public void clearEffects() {
+        gcEffects.clearRect(0,0, 2000, 2000);
+    }
+
     public void setGameControllerInstance(GameController gameController) {
         gameControllerInstance = gameController;
     }

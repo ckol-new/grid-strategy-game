@@ -24,7 +24,7 @@ public abstract class Entity {
         this.health = health;
         this.movementDistance = movementDistance;
         this.movementType = movementType;
-        this.attackType = attackType;
+        this.attackDistance = attackDistance;
         this.attackType = attackType;
         this.textureName = textureName;
         this.damage = damage;

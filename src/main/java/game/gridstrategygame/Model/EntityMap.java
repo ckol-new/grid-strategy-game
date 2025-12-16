@@ -209,6 +209,12 @@ public class EntityMap {
         // update state
         entity.setPosition(location);
     }
+    public void killEntity(Entity entity) {
+        if (!isEntityAlive(entity)) return;
+        int[] pos = entity.getPosition();
+        entityMatrix[pos[0]][pos[1]] = null;
+        activeEntitiesList.remove(entity);
+    }
 
 
     //DEBUG display

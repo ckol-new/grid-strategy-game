@@ -2,6 +2,7 @@ package game.gridstrategygame.Controller;
 
 import game.gridstrategygame.Game;
 import game.gridstrategygame.Model.*;
+import game.gridstrategygame.View.EffectType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,10 +40,14 @@ public class InputController {
 
             // based on turn state -> show valid moves
             if (entitySelected.getTurnState() == TurnState.MOVE) {
-                ArrayList<int[]> validTurns = getValidTilesMove(entitySelected, em);
-                gameController.showValidTurns(validTurns);
+                ArrayList<int[]> validTurns = getValidMove(entitySelected, em);
+                gameController.showValidTurns(EffectType.VALID_MOVE, validTurns);
             }
-
+            // if attacking -> show valid attacks
+            if (entitySelected.getTurnState() == TurnState.ATTACK) {
+                ArrayList<int[]> validTurns = getValidAttack(entitySelected, em);
+                gameController.showValidTurns(EffectType.VALID_ATTACK, validTurns);
+            }
         }
 
         else if (selectionBuffer.size() == 1) {
@@ -52,7 +57,7 @@ public class InputController {
             // check turn state of entity (at first index in buffer) (previous selection)
             if (selectionBuffer.get(0).entity.getTurnState() == TurnState.MOVE) {
                 // get valid positions
-                ArrayList<int[]> validPos = getValidTilesMove(selectionBuffer.get(0).entity, em);
+                ArrayList<int[]> validPos = getValidMove(selectionBuffer.get(0).entity, em);
 
                 // if move -> selection must be valid
                 boolean isValisPos = false;
@@ -71,16 +76,33 @@ public class InputController {
                     return false;
                 }
             }
-            //TODO add logic for attacks
+            if (selectionBuffer.get(0).entity.getTurnState() == TurnState.ATTACK) {
+                // get valid attacks
+                ArrayList<int[]> validPos = getValidAttack(selectionBuffer.get(0).entity, em);
+
+                // if attack -> selection must be valid
+                boolean isValisPos = false;
+                for (int[] vPos : validPos) {
+                    // if valid -> do seletion
+                    if (Arrays.equals(pos, vPos)) {
+                        isValisPos = true;
+                        selectionBuffer.add(selection);
+                    }
+                }
+
+                // if not valid -> clear buffer
+                if (!isValisPos) {
+                    // clear buffer, return false
+                    selectionBuffer.clear();
+                    return false;
+                }
+
+            }
         }
 
         // if buffer is full -> do action
         if (selectionBuffer.size() == 2) {
             completeTurn(em);
-        }
-        // show user valid turns
-        else if (selectionBuffer.size() == 1) {
-
         }
 
         return true;
@@ -100,21 +122,42 @@ public class InputController {
         if (turnState == TurnState.MOVE) {
             // move entity
             em.moveEntity(entityTurn, location);
-
-            //TODO update entity turn state (for now don't)
-            // DEBUG
-            // entityTurn.updateTurnState();
+            // update turn state
+            entityTurn.updateTurnState();
         }
 
+        else if(turnState == TurnState.ATTACK) {
+            // get action type
+            EffectType effect = EffectType.WHITE_SLASH_ATTACK;
 
+            // get location
+            ArrayList<int[]> locations = new ArrayList<>();
+            locations.add(selectionBuffer.get(1).pos);
+
+            // null check -> if null miss
+            if (selectionBuffer.get(1).pos == null) {
+                ActionsController.miss(effect, locations, gameController);
+            }
+            else {
+                ActionsController.attack(
+                        effect,
+                        selectionBuffer.get(0).entity,
+                        locations,
+                        selectionBuffer.get(1).entity,
+                        em,
+                        gameController);
+            }
+
+            // update turn state
+            entityTurn.updateTurnState();
+        }
 
         // clear buffer
         selectionBuffer.clear();
-
     }
 
     // get list of valid tiles to move to for given entity
-    public ArrayList<int[]> getValidTilesMove(Entity e, EntityMap em) {
+    public ArrayList<int[]> getValidMove(Entity e, EntityMap em) {
         ArrayList<int[]> validTilesList = new ArrayList<>();
 
         // get entity location
@@ -128,6 +171,17 @@ public class InputController {
         if (movementType == MovementType.ORTHOGONAL) {
             int[][] orthoNeighours = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
             for (int[] neighbour : orthoNeighours) {
+                // multiply by movement distance
+                Arrays.setAll(neighbour, i -> neighbour[i] * movementDistance);
+
+                int[] next = {neighbour[0] + eLocation[0], neighbour[1] + eLocation[1]};
+
+                validTilesList.add(next);
+            }
+        }
+        else if (movementType == MovementType.DIAGONAL) {
+            int[][] diagoNeighbours = {{-1, -1}, {1, -1}, {1, 1}, {-1, 1}};
+            for (int[] neighbour : diagoNeighbours) {
                 // multiply by movement distance
                 Arrays.setAll(neighbour, i -> neighbour[i] * movementDistance);
 
@@ -151,7 +205,55 @@ public class InputController {
             validTilesList.remove(posRemove);
         }
 
+        return validTilesList;
+    }
+    public ArrayList<int[]> getValidAttack(Entity e, EntityMap em) {
+        ArrayList<int[]> validTilesList = new ArrayList<>();
 
+        // get entity location
+        int[] eLocation = e.getPosition();
+
+        // get entity attack type and distance
+        AttackType attackType = e.getAttackType();
+        int attackDistance = e.getAttackDistance();
+
+        // calculate valid squares
+        if (attackType== AttackType.ORTHOGONAL) {
+            int[][] orthoNeighours = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+            for (int[] neighbour : orthoNeighours) {
+                // multiply by movement distance
+                Arrays.setAll(neighbour, i -> neighbour[i] * attackDistance);
+
+                int[] next = {neighbour[0] + eLocation[0], neighbour[1] + eLocation[1]};
+
+                validTilesList.add(next);
+            }
+        }
+        else if (attackType == AttackType.DIAGONAL) {
+            int[][] diagoNeighbours = {{-1, -1}, {1, -1}, {1, 1}, {-1, 1}};
+            for (int[] neighbour : diagoNeighbours) {
+                // multiply by movement distance
+                Arrays.setAll(neighbour, i -> neighbour[i] * attackDistance);
+
+                int[] next = {neighbour[0] + eLocation[0], neighbour[1] + eLocation[1]};
+
+                validTilesList.add(next);
+            }
+        }
+
+        // remove none valid positions
+        ArrayList<int[]> toBeRemoved = new ArrayList<>();
+        for (int[] pos : validTilesList) {
+            // remove all out of bounds
+            if (!em.isInBound(pos)) toBeRemoved.add(pos);
+
+            // remove all that are impassable
+            else if ((em.getEntityAtPos(pos) instanceof IMPASSABLE)) toBeRemoved.add(pos);
+        }
+
+        for (int[] posRemove : toBeRemoved) {
+            validTilesList.remove(posRemove);
+        }
 
         return validTilesList;
     }
