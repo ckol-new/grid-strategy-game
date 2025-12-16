@@ -27,6 +27,7 @@ public class EntityMap {
 
         //DEBUG
         randPos();
+        randPos();
         //DEBUG
         DEBUG_DISPLAY();
     }
