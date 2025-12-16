@@ -3,8 +3,8 @@ package game.gridstrategygame.Model;
 public class Knight extends Entity{
     // fields
 
-    public Knight(int health, int movementDistance, MovementType movementType, String textureName, int damage, Allegiance allegiance) {
-        super(health, movementDistance, movementType, textureName, damage, allegiance);
+    public Knight(int health, int movementDistance, MovementType movementType, int attackDistance, AttackType attackType, String textureName, int damage, Allegiance allegiance) {
+        super(health, movementDistance, movementType, attackDistance, attackType, textureName, damage, allegiance);
     }
 
     @Override

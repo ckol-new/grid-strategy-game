@@ -15,7 +15,7 @@ public class EntityMap {
     int[] mapSize;
 
     // constructor
-    public EntityMap(TerrainMap terrainMap) {
+    public EntityMap(TerrainMap terrainMap, int localDifficulty) {
         // set field
         this.localDifficulty = localDifficulty;
 
@@ -25,9 +25,11 @@ public class EntityMap {
         // get entity matrix
         entityMatrix = convertToEntityMatrix(terrainMap);
 
-        //DEBUG
-        randPos();
-        randPos();
+        // randomize positions
+        randAllyPos();
+        randEnemyPos();
+
+
         //DEBUG
         DEBUG_DISPLAY();
     }
@@ -59,7 +61,7 @@ public class EntityMap {
 
     // TEMP function, will be replaced
     // random entity position(
-    private void randPos() {
+    private void randAllyPos() {
         Random rand = new Random();
         int[] randPos = new int[2];
         boolean isGenerated = false;
@@ -76,6 +78,73 @@ public class EntityMap {
         }
 
         placeKnight(randPos[0], randPos[1]);
+    }
+
+    // random enemy position
+    private void randEnemyPos() {
+        Random rand = new Random();
+
+        int points = localDifficulty;
+        while (points > 0) {
+
+            int[] randPos = new int[2];
+            boolean isGenerated = false;
+            while(!isGenerated) {
+
+                randPos = new int[]{rand.nextInt(0, mapSize[0]), rand.nextInt(0, mapSize[1])};
+                if (this.isWalkable(randPos)) {
+                    isGenerated = true;
+                    continue;
+                }
+
+                isGenerated = false;
+            }
+
+            // place skeleton
+            placeSkeleton(randPos[0], randPos[1]);
+
+            // update points
+            points = points - 1;
+        }
+    }
+
+
+    // place knight enemy
+    private void placeKnight(int r, int c) {
+        Knight knight = new Knight(
+                EntityDataUtil.KNIGHT_HEALTH,
+                EntityDataUtil.KNIGHT_MOVEMENT_DISTANCE,
+                EntityDataUtil.KNIGHT_MOVEMENT_TYPE,
+                EntityDataUtil.KNIGHT_ATTACK_DISTANCE,
+                EntityDataUtil.KNIGHT_ATTACK_TYPE,
+                EntityDataUtil.KNIGHT_TEXTURE_NAME,
+                EntityDataUtil.KNIGHT_DAMAGE,
+                EntityDataUtil.KNIGHT_ALLEGIANCE);
+        // add to matrix and active entity array
+        entityMatrix[r][c] = knight;
+        activeEntitiesList.add(knight);
+
+        // update knight position variable
+        knight.setPosition(new int[]{r, c});
+    }
+    // place skeleton enemy
+    private void placeSkeleton(int r, int c) {
+        Skeleton skeleton = new Skeleton(
+                EntityDataUtil.SKELETON_HEALTH,
+                EntityDataUtil.SKELETON_MOVEMENT_DISTANCE,
+                EntityDataUtil.SKELETON_MOVEMENT_TYPE,
+                EntityDataUtil.SKELETON_ATTACK_DISTANCE,
+                EntityDataUtil.SKELETON_ATTACK_TYPE,
+                EntityDataUtil.SKELETON_TEXTURE_NAME,
+                EntityDataUtil.SKELETON_DAMAGE,
+                EntityDataUtil.SKELETON_ALLEGIANCE
+        );
+        // add to matrix and active entity array
+        entityMatrix[r][c] = skeleton;
+        activeEntitiesList.add(skeleton);
+
+        // update knight position variable
+        skeleton.setPosition(new int[]{r, c});
     }
 
     // getters
@@ -141,16 +210,6 @@ public class EntityMap {
         entity.setPosition(location);
     }
 
-    // DEBUG place knight enemy
-    private void placeKnight(int r, int c) {
-        Knight knight = new Knight(3, 2, MovementType.ORTHOGONAL, "knight.png", 1, Allegiance.ALLY);
-        // add to matrix and active entity array
-        entityMatrix[r][c] = knight;
-        activeEntitiesList.add(knight);
-
-        // update knight position variable
-        knight.setPosition(new int[]{r, c});
-    }
 
     //DEBUG display
     public void DEBUG_DISPLAY() {

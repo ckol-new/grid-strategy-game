@@ -6,6 +6,8 @@ public abstract class Entity {
     private int movementDistance;
     private int damage;
     private MovementType movementType;
+    private int attackDistance;
+    private AttackType attackType;
     private TurnState turnState = TurnState.MOVE; // basic
     private String textureName;
     private Allegiance allegiance;
@@ -18,10 +20,12 @@ public abstract class Entity {
         this.textureName = textureName;
         damage = 0; // if not declared
     }
-    public Entity(int health, int movementDistance, MovementType movementType, String textureName, int damage, Allegiance allegiance) {
+    public Entity(int health, int movementDistance, MovementType movementType, int attackDistance, AttackType attackType, String textureName, int damage, Allegiance allegiance) {
         this.health = health;
         this.movementDistance = movementDistance;
         this.movementType = movementType;
+        this.attackType = attackType;
+        this.attackType = attackType;
         this.textureName = textureName;
         this.damage = damage;
         this.allegiance = allegiance;
@@ -39,6 +43,8 @@ public abstract class Entity {
     public int getMovementDistance() { return movementDistance; }
     public int getDamage() { return damage; }
     public MovementType getMovementType() { return movementType; }
+    public int getAttackDistance() { return attackDistance; }
+    public AttackType getAttackType() { return attackType; }
     public TurnState getTurnState() { return turnState; }
     public String getTextureName() { return textureName; }
     public Allegiance getAllegiance() { return allegiance; }
@@ -49,9 +55,10 @@ public abstract class Entity {
     public void setMovementDistance(int movementDistance) { this.movementDistance= movementDistance; }
     public void setDamage(int damage) { this.damage = damage; }
     public void setMovementType(MovementType movementType) { this.movementType = movementType; }
+    public void setAttackDistance(int attackDistance) { this.attackDistance = attackDistance; }
+    public void setAttackType(AttackType attackType) { this.attackType = attackType; }
     public void setTurnState(TurnState turnState) { this.turnState= turnState; }
     public void setAllegiance(Allegiance allegiance) { this.allegiance = allegiance; }
     public void setPosition(int[] position) { this.position = position; }
-
 
 }

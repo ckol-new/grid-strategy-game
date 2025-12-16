@@ -20,7 +20,7 @@ public class GameController {
     AnchorPane root;
     GridView gridView = new GridView(800, 580);
     TerrainMap tm = new TerrainMap();
-    EntityMap em = new EntityMap(tm);
+    EntityMap em = new EntityMap(tm, 3);
     InputController inputController = new InputController(this);
 
     int[] tileSelected;
@@ -88,6 +88,9 @@ public class GameController {
         this.root = root;
         setGridView();
         gridView.setGameControllerInstance(this);
+
+        gridView.drawTerrain(tm);
+        gridView.drawEntities(em);
     }
 
 }
