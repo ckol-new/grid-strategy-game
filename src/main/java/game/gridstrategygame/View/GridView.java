@@ -12,6 +12,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
+
 public class GridView extends StackPane {
     // static fields
     Parent root;
@@ -28,9 +30,11 @@ public class GridView extends StackPane {
     // fields
     Canvas terrainCanvas;
     Canvas entityCanvas;
+    Canvas validTurnCanvas;
     Canvas effectCanvas;
     GraphicsContext gcTerrain;
     GraphicsContext gcEntity;
+    GraphicsContext gcValidTurn;
     GraphicsContext gcEffects;
     Pane inputOverlay;
 
@@ -49,15 +53,18 @@ public class GridView extends StackPane {
     private void setLayers() {
         terrainCanvas = new Canvas();
         entityCanvas = new Canvas();
+        validTurnCanvas = new Canvas();
         effectCanvas = new Canvas();
         inputOverlay = new Pane();
 
         terrainCanvas.setHeight(HEIGHT);
         entityCanvas.setHeight(HEIGHT);
+        validTurnCanvas.setHeight(HEIGHT);
         effectCanvas.setHeight(HEIGHT);
 
         terrainCanvas.setWidth(WIDTH);
         entityCanvas.setWidth(WIDTH);
+        validTurnCanvas.setWidth(WIDTH);
         effectCanvas.setWidth(WIDTH);
 
         inputOverlay.setPrefHeight(HEIGHT);
@@ -67,18 +74,20 @@ public class GridView extends StackPane {
 
         StackPane.setAlignment(terrainCanvas, Pos.TOP_LEFT);
         StackPane.setAlignment(entityCanvas, Pos.TOP_LEFT);
+        StackPane.setAlignment(validTurnCanvas, Pos.TOP_LEFT);
         StackPane.setAlignment(effectCanvas, Pos.TOP_LEFT);
         StackPane.setAlignment(inputOverlay, Pos.TOP_LEFT);
 
         addOverlayHandlers();
 
-        this.getChildren().addAll(terrainCanvas, entityCanvas, effectCanvas, inputOverlay);
+        this.getChildren().addAll(terrainCanvas, entityCanvas, validTurnCanvas, effectCanvas, inputOverlay);
     }
 
     // get graphics context
     private void setGraphicsContext() {
         gcTerrain = terrainCanvas.getGraphicsContext2D();
         gcEntity = entityCanvas.getGraphicsContext2D();
+        gcValidTurn = validTurnCanvas.getGraphicsContext2D();
         gcEffects = effectCanvas.getGraphicsContext2D();
     }
 
@@ -140,6 +149,19 @@ public class GridView extends StackPane {
                 gcEntity.drawImage(entityTexture, x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
             }
         }
+    }
+
+    public void drawValidTurns(EffectType type, ArrayList<int[]> locations) {
+        // clear effect canvas
+        gcValidTurn.clearRect(0,0, 2000, 2000);
+
+        for (int[] location : locations) {
+            Image effectTexture = new Image(GridView.class.getResourceAsStream("/game/gridstrategygame/textures/" + type.textureName));
+            gcValidTurn.drawImage(effectTexture, location[1] * TILE_WIDTH, location[0] * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+        }
+    }
+    public void clearValidTurns() {
+        gcValidTurn.clearRect(0,0, 2000, 2000);
     }
 
     public void setGameControllerInstance(GameController gameController) {

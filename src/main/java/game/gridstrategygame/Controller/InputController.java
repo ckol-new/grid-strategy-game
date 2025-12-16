@@ -1,5 +1,6 @@
 package game.gridstrategygame.Controller;
 
+import game.gridstrategygame.Game;
 import game.gridstrategygame.Model.*;
 
 import java.util.ArrayList;
@@ -8,8 +9,10 @@ import java.util.Arrays;
 public class InputController {
     // fields
     ArrayList<Selection> selectionBuffer = new ArrayList<>(); // index 1: select etity, index to is select location
+    GameController gameController;
 
-    public InputController() {
+    public InputController(GameController gameController) {
+        this.gameController = gameController;
     }
 
     // check selection (must be ally to go into position one)
@@ -34,10 +37,18 @@ public class InputController {
             // add to buffer
             selectionBuffer.add(selection);
 
+            // based on turn state -> show valid moves
+            if (entitySelected.getTurnState() == TurnState.MOVE) {
+                ArrayList<int[]> validTurns = getValidTilesMove(entitySelected, em);
+                gameController.showValidTurns(validTurns);
+            }
 
         }
 
         else if (selectionBuffer.size() == 1) {
+            // clear valid turns
+            gameController.clearValidTurns();
+
             // check turn state of entity (at first index in buffer) (previous selection)
             if (selectionBuffer.get(0).entity.getTurnState() == TurnState.MOVE) {
                 // get valid positions

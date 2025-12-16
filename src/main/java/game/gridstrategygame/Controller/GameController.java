@@ -4,12 +4,14 @@ import game.gridstrategygame.Game;
 import game.gridstrategygame.Model.Entity;
 import game.gridstrategygame.Model.EntityMap;
 import game.gridstrategygame.Model.TerrainMap;
+import game.gridstrategygame.View.EffectType;
 import game.gridstrategygame.View.GridView;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameController {
@@ -19,7 +21,7 @@ public class GameController {
     GridView gridView = new GridView(800, 580);
     TerrainMap tm = new TerrainMap();
     EntityMap em = new EntityMap(tm);
-    InputController inputController = new InputController();
+    InputController inputController = new InputController(this);
 
     int[] tileSelected;
 
@@ -57,6 +59,7 @@ public class GameController {
         });
     }
 
+    // main event handler
     public void handleSelection(int[] pos) {
         tileSelected = pos;
         //DEBUG
@@ -70,6 +73,10 @@ public class GameController {
         }
     }
 
+    public void showValidTurns(ArrayList<int[]> validTurns) {
+        gridView.drawValidTurns(EffectType.VALID_MOVE, validTurns);
+    }
+    public void clearValidTurns() { gridView.clearValidTurns(); }
 
 
 
