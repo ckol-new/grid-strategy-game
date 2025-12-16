@@ -135,7 +135,7 @@ public class InputController {
             locations.add(selectionBuffer.get(1).pos);
 
             // null check -> if null miss
-            if (selectionBuffer.get(1).pos == null) {
+            if (em.getEntityAtPos(selectionBuffer.get(1).pos) == null) {
                 ActionsController.miss(effect, locations, gameController);
             }
             else {

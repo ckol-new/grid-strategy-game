@@ -173,6 +173,10 @@ public class GridView extends StackPane {
             Image effectTexture = new Image(GridView.class.getResourceAsStream("/game/gridstrategygame/textures/" + type.textureName));
             gcEffects.drawImage(effectTexture, location[1] * TILE_WIDTH, location[0] * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
         }
+
+        PauseTransition p = new PauseTransition(Duration.millis(200));
+        p.setOnFinished(e -> clearEffects());
+        p.play();
     }
     public void clearEffects() {
         gcEffects.clearRect(0,0, 2000, 2000);
