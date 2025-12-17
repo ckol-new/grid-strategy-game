@@ -14,13 +14,12 @@ public class TerrainMap {
     int[] mapSize;
 
     // constructor
-    public TerrainMap() {
+    public TerrainMap(String mapName) {
         // generate map
-        String mapName = "map1.txt";
-
         terrainMatrix = convertToTerrainMatrix(mapName);
 
-        DEBUG_DISPLAY();
+        // DEBUG
+        // DEBUG_DISPLAY();
     }
 
     // convert map file to terrain matrix

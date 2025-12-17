@@ -20,9 +20,8 @@ public class GameController {
     Game gameInstance;
     AnchorPane root;
     GridView gridView = new GridView(800, 580);
-    TerrainMap tm = new TerrainMap();
-    EntityMap em = new EntityMap(tm, 3);
     InputController inputController = new InputController(this);
+    RunController runController;
 
     int[] tileSelected;
 
@@ -34,7 +33,10 @@ public class GameController {
     MenuItem drawMenuItem;
 
     // constructor
-    public GameController() {}
+    public GameController() {
+        // get run controller
+        runController = new RunController();
+    }
 
     // initialize
     @FXML
@@ -55,8 +57,8 @@ public class GameController {
     public void setUIEventHandlers() {
         returnMenuItem.setOnAction(evt -> {gameInstance.setSceneMenu();});
         drawMenuItem.setOnAction(evt -> {
-            gridView.drawTerrain(tm);
-            gridView.drawEntities(em);
+            gridView.drawTerrain(runController.getTerrainMap());
+            gridView.drawEntities(runController.getEntityMap());
         });
     }
 
@@ -65,12 +67,12 @@ public class GameController {
         tileSelected = pos;
         //DEBUG
         System.out.println("selected: " + Arrays.toString(pos));
-        Selection selection = new Selection(em.getEntityAtPos(pos), pos);
+        Selection selection = new Selection(runController.getEntityMap().getEntityAtPos(pos), pos);
 
         // check selection
-        boolean turnBoolean = inputController.checkSelection(selection, em);
+        boolean turnBoolean = inputController.checkSelection(selection, runController.getEntityMap());
         if (turnBoolean) {
-            gridView.drawEntities(em);
+            gridView.drawEntities(runController.getEntityMap());
         }
     }
 
@@ -92,8 +94,8 @@ public class GameController {
         setGridView();
         gridView.setGameControllerInstance(this);
 
-        gridView.drawTerrain(tm);
-        gridView.drawEntities(em);
+        gridView.drawTerrain(runController.getTerrainMap());
+        gridView.drawEntities(runController.getEntityMap());
     }
 
 }

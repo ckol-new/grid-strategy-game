@@ -25,11 +25,6 @@ public class EntityMap {
         // get entity matrix
         entityMatrix = convertToEntityMatrix(terrainMap);
 
-        // randomize positions
-        randAllyPos();
-        randEnemyPos();
-
-
         //DEBUG
         DEBUG_DISPLAY();
     }
@@ -108,6 +103,38 @@ public class EntityMap {
         }
     }
 
+    // place entity class (randomizes a valid position for character
+    public void placeEntities(Entity... entities) {
+        Random rand = new Random();
+        for (Entity e : entities) {
+            int[] randPos = new int[2];
+            boolean isPlaced = false;
+            while(!isPlaced) {
+                // get random position
+                randPos = new int[]{rand.nextInt(0, mapSize[0]), rand.nextInt(0, mapSize[1])};
+
+                // check random position
+                if (!isInBound(randPos)) {
+                    isPlaced = false;
+                    continue;
+                }
+
+                if (!isWalkable(randPos)) {
+                    isPlaced = false;
+                    continue;
+                }
+
+                // escape loop
+                isPlaced = true;
+            }
+
+            // place entity
+            entityMatrix[randPos[0]][randPos[1]] = e;
+            activeEntitiesList.add(e);
+            e.setPosition(randPos);
+        }
+    }
+
 
     // place knight enemy
     private void placeKnight(int r, int c) {
@@ -119,7 +146,8 @@ public class EntityMap {
                 EntityDataUtil.KNIGHT_ATTACK_TYPE,
                 EntityDataUtil.KNIGHT_TEXTURE_NAME,
                 EntityDataUtil.KNIGHT_DAMAGE,
-                EntityDataUtil.KNIGHT_ALLEGIANCE);
+                EntityDataUtil.KNIGHT_ALLEGIANCE
+        );
         // add to matrix and active entity array
         entityMatrix[r][c] = knight;
         activeEntitiesList.add(knight);
@@ -224,6 +252,7 @@ public class EntityMap {
                 if (e == null) System.out.print(". ");
                 else if (e instanceof IMPASSABLE) System.out.print("X ");
                 else if (e instanceof Knight) System.out.print("P ");
+                else if (e instanceof Skeleton) System.out.print("S ");
             }
             System.out.println();
         }
