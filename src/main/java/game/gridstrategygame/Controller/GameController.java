@@ -12,6 +12,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.effect.Effect;
 import javafx.scene.layout.AnchorPane;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -80,7 +81,7 @@ public class GameController {
     public void showValidTurns(EffectType type, ArrayList<int[]> validTurns) {
         gridView.drawValidTurns(type, validTurns);
     }
-    public void clearValidTurns() { gridView.clearValidTurns(); }
+    public void clearValidTurns(ArrayList<int[]> locations) { gridView.clearValidTurns(locations); }
     public void drawEffects(EffectType type, ArrayList<int[]> effectLocations) {
         gridView.drawEffect(type, effectLocations);
     }

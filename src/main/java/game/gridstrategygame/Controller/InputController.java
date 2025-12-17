@@ -1,6 +1,5 @@
 package game.gridstrategygame.Controller;
 
-import game.gridstrategygame.Game;
 import game.gridstrategygame.Model.*;
 import game.gridstrategygame.View.EffectType;
 
@@ -12,6 +11,9 @@ public class InputController {
     ArrayList<Selection> selectionBuffer = new ArrayList<>(); // index 1: select etity, index to is select location
     ArrayList<Entity> allyRoster;
     GameController gameController;
+    ArrayList<int[]> clearBuffer = new ArrayList<>(); // positons to clear (valid turn canvas)
+    ArrayList<int[]> clearBufferCooldown = new ArrayList<>(); // positons to clear (valid turn canvas)
+
 
     public InputController(GameController gameController, ArrayList<Entity> allyRoster) {
         this.gameController = gameController;
@@ -46,18 +48,20 @@ public class InputController {
             // based on turn state -> show valid moves
             if (entitySelected.getTurnState() == TurnState.MOVE) {
                 ArrayList<int[]> validTurns = getValidMove(entitySelected, em);
+                clearBuffer = validTurns;
                 gameController.showValidTurns(EffectType.VALID_MOVE, validTurns);
             }
             // if attacking -> show valid attacks
             if (entitySelected.getTurnState() == TurnState.ATTACK) {
                 ArrayList<int[]> validTurns = getValidAttack(entitySelected, em);
+                clearBuffer = validTurns;
                 gameController.showValidTurns(EffectType.VALID_ATTACK, validTurns);
             }
         }
 
         else if (selectionBuffer.size() == 1) {
             // clear valid turns
-            gameController.clearValidTurns();
+            gameController.clearValidTurns(clearBuffer);
 
             // check turn state of entity (at first index in buffer) (previous selection)
             if (selectionBuffer.get(0).entity.getTurnState() == TurnState.MOVE) {
@@ -155,6 +159,12 @@ public class InputController {
 
             // update turn state
             entityTurn.updateTurnState();
+
+            // draw cooldown effect
+            ArrayList<int[]> allyPosWrapper = new ArrayList<>();
+            allyPosWrapper.add(selectionBuffer.get(0).pos);
+            clearBufferCooldown.add(selectionBuffer.get(0).pos);
+            gameController.showValidTurns(EffectType.TURN_COOLDOWN, allyPosWrapper);
         }
 
         // clear buffer
@@ -179,10 +189,12 @@ public class InputController {
         }
         return true;
     }
-    // reset all ally turn state to move
+    // reset all ally turn state to move, clear all cooldown markers
     private void resetTurnStates() {
         for (Entity e : allyRoster) {
             e.updateTurnState(); // sets from cooldown -> new;
+            gameController.clearValidTurns(clearBufferCooldown);
+            clearBufferCooldown.clear();
         }
     }
 
