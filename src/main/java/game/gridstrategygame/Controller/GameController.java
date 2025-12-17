@@ -20,7 +20,7 @@ public class GameController {
     Game gameInstance;
     AnchorPane root;
     GridView gridView = new GridView(800, 580);
-    InputController inputController = new InputController(this);
+    InputController inputController;
     RunController runController;
 
     int[] tileSelected;
@@ -36,6 +36,7 @@ public class GameController {
     public GameController() {
         // get run controller
         runController = new RunController();
+        inputController = new InputController(this, runController.getAllyRoster());
     }
 
     // initialize

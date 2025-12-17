@@ -5,7 +5,8 @@ public enum TurnState {
     MOVE_SLOWED("move_slowed"),
     SKIPPED("skipped"),
     ATTACK("attacked"),
-    IDLE("idle");
+    IDLE("idle"),
+    TURN_COOLDOWN("cooldown");
 
     final String state;
     TurnState(String state) {

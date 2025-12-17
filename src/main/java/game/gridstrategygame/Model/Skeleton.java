@@ -9,6 +9,7 @@ public class Skeleton extends Entity{
     @Override
     public void updateTurnState() {
         if (this.getTurnState() == TurnState.MOVE) this.setTurnState(TurnState.ATTACK);
-        if (this.getTurnState() == TurnState.ATTACK) this.setTurnState(TurnState.ATTACK);
+        if (this.getTurnState() == TurnState.ATTACK) this.setTurnState(TurnState.TURN_COOLDOWN);
+        if (this.getTurnState() == TurnState.TURN_COOLDOWN) this.setTurnState(TurnState.MOVE);
     }
 }

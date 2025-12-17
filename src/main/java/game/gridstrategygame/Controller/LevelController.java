@@ -87,4 +87,5 @@ public class LevelController {
     // getters
     public EntityMap getEntityMap() { return em; }
     public TerrainMap getTerrainMap() { return tm; }
+    public ArrayList<Entity> getAllyRoster() { return allyRoster; }
 }

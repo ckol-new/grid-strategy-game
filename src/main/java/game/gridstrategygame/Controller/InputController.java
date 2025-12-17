@@ -10,10 +10,12 @@ import java.util.Arrays;
 public class InputController {
     // fields
     ArrayList<Selection> selectionBuffer = new ArrayList<>(); // index 1: select etity, index to is select location
+    ArrayList<Entity> allyRoster;
     GameController gameController;
 
-    public InputController(GameController gameController) {
+    public InputController(GameController gameController, ArrayList<Entity> allyRoster) {
         this.gameController = gameController;
+        this.allyRoster = allyRoster;
     }
 
     // check selection (must be ally to go into position one)
@@ -34,6 +36,9 @@ public class InputController {
             if (!(entitySelected.getAllegiance() == Allegiance.ALLY)) {
                 return false;
             }
+
+            // check if on turn cooldown (wait until next turn)
+            if (entitySelected.getTurnState() == TurnState.TURN_COOLDOWN) return false;
 
             // add to buffer
             selectionBuffer.add(selection);
@@ -154,6 +159,31 @@ public class InputController {
 
         // clear buffer
         selectionBuffer.clear();
+
+        // check if all ally turns have been taken
+        if (checkTurnEnd()) {
+            // set all turn states to move
+            resetTurnStates();
+
+            // do computer turn
+        }
+    }
+
+    // when all allies have taken their turn -> reset turn states, and do enemy turns
+    private boolean checkTurnEnd() {
+        // if all turn states are on cooldown (from roster) -> set all back to move
+        for (Entity e : allyRoster) {
+            if (e.getTurnState() != TurnState.TURN_COOLDOWN) {
+                return false;
+            }
+        }
+        return true;
+    }
+    // reset all ally turn state to move
+    private void resetTurnStates() {
+        for (Entity e : allyRoster) {
+            e.updateTurnState(); // sets from cooldown -> new;
+        }
     }
 
     // get list of valid tiles to move to for given entity

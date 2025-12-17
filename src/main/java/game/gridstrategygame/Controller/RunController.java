@@ -59,5 +59,5 @@ public class RunController {
     // intermediaries
     public EntityMap getEntityMap() { return levelController.getEntityMap(); }
     public TerrainMap getTerrainMap() { return levelController.getTerrainMap(); }
-
+    public ArrayList<Entity> getAllyRoster() { return levelController.getAllyRoster(); }
 }

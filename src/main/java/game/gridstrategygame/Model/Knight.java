@@ -10,7 +10,8 @@ public class Knight extends Entity{
     @Override
     public void updateTurnState() {
         if (this.getTurnState() == TurnState.MOVE) this.setTurnState(TurnState.ATTACK);
-        else if (this.getTurnState() == TurnState.ATTACK) this.setTurnState(TurnState.MOVE);
+        else if (this.getTurnState() == TurnState.ATTACK) this.setTurnState(TurnState.TURN_COOLDOWN);
+        else if (this.getTurnState() == TurnState.TURN_COOLDOWN) this.setTurnState(TurnState.MOVE);
     }
 
 }
