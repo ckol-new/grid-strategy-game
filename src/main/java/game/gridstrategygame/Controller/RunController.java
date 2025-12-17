@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class RunController {
     private LevelController levelController;
     private static final int NUM_START_ALLY = 2;
-    private static final int START_DIFFICULTY = 1;
+    private static final int START_DIFFICULTY = 3;
     private int localDifficulty = START_DIFFICULTY;
     private ArrayList<Entity> allyRoster;
 
