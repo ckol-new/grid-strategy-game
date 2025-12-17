@@ -83,6 +83,15 @@ public class LevelController {
         }
     }
 
+    // check if level is over (all enemies in roster are dead)
+    public boolean isLevelOver() {
+        for (Entity e : enemyRoster) {
+            if (e.getHealth() > 0) return false;
+        }
+
+        return true;
+    }
+
 
     // getters
     public EntityMap getEntityMap() { return em; }

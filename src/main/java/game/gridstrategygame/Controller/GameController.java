@@ -59,9 +59,14 @@ public class GameController {
     public void setUIEventHandlers() {
         returnMenuItem.setOnAction(evt -> {gameInstance.setSceneMenu();});
         drawMenuItem.setOnAction(evt -> {
-            gridView.drawTerrain(runController.getTerrainMap());
-            gridView.drawEntities(runController.getEntityMap());
+            drawTerrainEntity();
         });
+    }
+
+    // draw terrain nd entity
+    private void drawTerrainEntity() {
+        gridView.drawTerrain(runController.getTerrainMap());
+        gridView.drawEntities(runController.getEntityMap());
     }
 
     // main event handler
@@ -76,6 +81,15 @@ public class GameController {
         if (turnBoolean) {
             gridView.drawEntities(runController.getEntityMap());
         }
+
+        // check if all enemies are dead -> move onto next level
+        if (runController.isLevelOver()) {
+            // generate next level
+            runController.generateNextLevel();
+            // draw
+            drawTerrainEntity();
+        }
+
     }
 
     public void showValidTurns(EffectType type, ArrayList<int[]> validTurns) {
@@ -96,8 +110,7 @@ public class GameController {
         setGridView();
         gridView.setGameControllerInstance(this);
 
-        gridView.drawTerrain(runController.getTerrainMap());
-        gridView.drawEntities(runController.getEntityMap());
+        drawTerrainEntity();
     }
 
 }

@@ -167,7 +167,6 @@ public class GridView extends StackPane {
 
     }
 
-
     public void drawEffect(EffectType type, ArrayList<int[]> locations) {
         // clear effect canvas
         // gcEffects.clearRect(0,0, 2000, 2000);
