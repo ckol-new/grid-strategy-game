@@ -71,6 +71,9 @@ public class GameController {
 
     // main event handler
     public void handleSelection(int[] pos) {
+        // clear ally roster of all dead before turn start
+        runController.cullAllyRoster();
+
         tileSelected = pos;
         //DEBUG
         System.out.println("selected: " + Arrays.toString(pos));
@@ -84,6 +87,9 @@ public class GameController {
 
         // check if all enemies are dead -> move onto next level
         if (runController.isLevelOver()) {
+            // clear everything
+            inputController.resetTurnStates();
+
             // generate next level
             runController.generateNextLevel();
             // draw

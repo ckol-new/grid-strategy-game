@@ -164,7 +164,9 @@ public class GridView extends StackPane {
         for (int[] location : locations) {
             gcValidTurn.clearRect(location[1] * TILE_WIDTH,location[0] * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
         }
-
+    }
+    public void clearAllValidTurns() {
+        gcValidTurn.clearRect(0, 0, 2000, 2000);
     }
 
     public void drawEffect(EffectType type, ArrayList<int[]> locations) {
@@ -182,6 +184,11 @@ public class GridView extends StackPane {
     }
     public void clearEffects() {
         gcEffects.clearRect(0,0, 2000, 2000);
+    }
+    public void clearEffects(ArrayList<int[]> locations) {
+        for (int[] location : locations) {
+            gcValidTurn.clearRect(location[1] * TILE_WIDTH,location[0] * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+        }
     }
 
     public void setGameControllerInstance(GameController gameController) {

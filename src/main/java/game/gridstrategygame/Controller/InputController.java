@@ -8,12 +8,11 @@ import java.util.Arrays;
 
 public class InputController {
     // fields
-    ArrayList<Selection> selectionBuffer = new ArrayList<>(); // index 1: select etity, index to is select location
-    ArrayList<Entity> allyRoster;
-    GameController gameController;
-    ArrayList<int[]> clearBuffer = new ArrayList<>(); // positons to clear (valid turn canvas)
-    ArrayList<int[]> clearBufferCooldown = new ArrayList<>(); // positons to clear (valid turn canvas)
-
+    private ArrayList<Selection> selectionBuffer = new ArrayList<>(); // index 1: select etity, index to is select location
+    private ArrayList<Entity> allyRoster;
+    private GameController gameController;
+    private ArrayList<int[]> clearBuffer = new ArrayList<>(); // positons to clear (valid turn canvas)
+    private ArrayList<int[]> clearBufferCooldown = new ArrayList<>(); // positons to clear (valid turn canvas)
 
     public InputController(GameController gameController, ArrayList<Entity> allyRoster) {
         this.gameController = gameController;
@@ -190,9 +189,9 @@ public class InputController {
         return true;
     }
     // reset all ally turn state to move, clear all cooldown markers
-    private void resetTurnStates() {
+    public void resetTurnStates() {
         for (Entity e : allyRoster) {
-            e.updateTurnState(); // sets from cooldown -> new;
+            e.setTurnState(TurnState.MOVE);
             gameController.clearValidTurns(clearBufferCooldown);
             clearBufferCooldown.clear();
         }

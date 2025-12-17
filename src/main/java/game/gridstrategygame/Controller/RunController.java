@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class RunController {
     private LevelController levelController;
     private static final int NUM_START_ALLY = 2;
-    private static final int START_DIFFICULTY = 3;
+    private static final int START_DIFFICULTY = 1;
     private int localDifficulty = START_DIFFICULTY;
     private ArrayList<Entity> allyRoster;
 
@@ -53,6 +53,22 @@ public class RunController {
         localDifficulty = localDifficulty + 1;
     }
 
+    // cull roster (if dead  -> remove)
+    public void cullAllyRoster() {
+        ArrayList<Entity> toBeRemoved = new ArrayList<>();
+
+        // check if dead
+        for (Entity e : allyRoster) {
+            if (e.getHealth() <= 0) {
+                toBeRemoved.add(e);
+            }
+        }
+
+        // remove all dead
+        for (Entity e : toBeRemoved) {
+            allyRoster.remove(e);
+        }
+    }
 
     // create section level branch
 
